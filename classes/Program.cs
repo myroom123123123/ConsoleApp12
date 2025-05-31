@@ -4,39 +4,49 @@
     {
         static void Main()
         {
-            // Створення матриць
-            Matrix m1 = new Matrix(new double[,] { { 1, 2 }, { 3, 4 } });
-            Matrix m2 = new Matrix(new double[,] { { 5, 6 }, { 7, 8 } });
+            // Створення кредитної картки
+            var card = new CreditCard(
+                "1234 5678 9012 3456",
+                "Іван Петренко",
+                new DateTime(2025, 12, 1),
+                1234,
+                5000,
+                1000);
 
-            Console.WriteLine("Матриця 1:");
-            m1.Print();
+            // Підписка на події
+            card.FundsDeposited += amount =>
+                Console.WriteLine($"Рахунок поповнено на {amount:C}");
 
-            Console.WriteLine("Матриця 2:");
-            m2.Print();
+            card.FundsWithdrawn += amount =>
+                Console.WriteLine($"Знято {amount:C} з рахунку");
 
-            // Додавання
-            Console.WriteLine("Сума матриць:");
-            (m1 + m2).Print();
+            card.CreditUsageStarted += () =>
+                Console.WriteLine("Увага! Ви почали використовувати кредитні кошти");
 
-            // Віднімання
-            Console.WriteLine("Різниця матриць:");
-            (m1 - m2).Print();
+            card.CreditLimitReached += () =>
+                Console.WriteLine("Увага! Досягнуто кредитний ліміт");
 
-            // Множення матриць
-            Console.WriteLine("Добуток матриць:");
-            (m1 * m2).Print();
+            card.PinChanged += () =>
+                Console.WriteLine("PIN-код успішно змінено");
 
-            // Множення на скаляр
-            Console.WriteLine("Матриця 1 * 2.5:");
-            (m1 * 2.5).Print();
+            // Виведення інформації про картку
+            card.PrintInfo();
 
-            // Порівняння
-            Console.WriteLine($"m1 == m2: {m1 == m2}");
-            Console.WriteLine($"m1 != m2: {m1 != m2}");
+            // Тестування операцій
+            card.Deposit(2000);
+            card.PrintInfo();
 
-            Matrix m3 = new Matrix(new double[,] { { 1, 2 }, { 3, 4 } });
-            Console.WriteLine($"m1 == m3: {m1 == m3}");
-            Console.WriteLine($"m1.Equals(m3): {m1.Equals(m3)}");
+            if (!card.Withdraw(4000, 0000))
+                Console.WriteLine("Помилка: невірний PIN або недостатньо коштів");
+
+            if (card.Withdraw(4000, 1234))
+                card.PrintInfo();
+
+            if (card.Withdraw(3000, 1234))
+                card.PrintInfo();
+
+            if (card.ChangePin(1234, 5678))
+                Console.WriteLine("PIN успішно змінено");
         }
     }
 }
