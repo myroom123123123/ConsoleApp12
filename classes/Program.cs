@@ -1,42 +1,69 @@
 ﻿namespace ConsoleApp12.classes
 {
-    class Program
+    using System;
+
+    public class Program
     {
-        static void Main()
+        // Делегати
+        public static Action DisplayCurrentTime = () =>
+            Console.WriteLine($"Поточний час: {DateTime.Now:HH:mm:ss}");
+
+        public static Action DisplayCurrentDate = () =>
+            Console.WriteLine($"Поточна дата: {DateTime.Now:dd.MM.yyyy}");
+
+        public static Action DisplayCurrentDayOfWeek = () =>
+            Console.WriteLine($"Поточний день тижня: {DateTime.Now.DayOfWeek}");
+
+        public static Func<double, double, double> CalculateTriangleArea = (b, h) =>
         {
-            // Створення матриць
-            Matrix m1 = new Matrix(new double[,] { { 1, 2 }, { 3, 4 } });
-            Matrix m2 = new Matrix(new double[,] { { 5, 6 }, { 7, 8 } });
+            if (b <= 0 || h <= 0)
+                throw new ArgumentException("Сторони мають бути більше 0");
+            return 0.5 * b * h;
+        };
 
-            Console.WriteLine("Матриця 1:");
-            m1.Print();
+        public static Func<double, double, double> CalculateRectangleArea = (w, h) =>
+        {
+            if (w <= 0 || h <= 0)
+                throw new ArgumentException("Сторони мають бути більше 0");
+            return w * h;
+        };
 
-            Console.WriteLine("Матриця 2:");
-            m2.Print();
+        public static Predicate<DateTime> IsWeekend = date =>
+            date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday;
 
-            // Додавання
-            Console.WriteLine("Сума матриць:");
-            (m1 + m2).Print();
+        public static void Main()
+        {
+            // Виклик методів через делегати
+            Console.WriteLine("1. Відображення часу, дати та дня тижня:");
+            DisplayCurrentTime();
+            DisplayCurrentDate();
+            DisplayCurrentDayOfWeek();
 
-            // Віднімання
-            Console.WriteLine("Різниця матриць:");
-            (m1 - m2).Print();
+            // Перевірка на вихідний
+            Console.WriteLine($"\n2. Сьогодні вихідний? {IsWeekend(DateTime.Now)}");
 
-            // Множення матриць
-            Console.WriteLine("Добуток матриць:");
-            (m1 * m2).Print();
+            // Обчислення площ
+            Console.WriteLine("\n3. Обчислення площ фігур:");
+            try
+            {
+                double triangleArea = CalculateTriangleArea(5, 4);
+                Console.WriteLine($"Площа трикутника (основа 5, висота 4): {triangleArea}");
 
-            // Множення на скаляр
-            Console.WriteLine("Матриця 1 * 2.5:");
-            (m1 * 2.5).Print();
+                double rectangleArea = CalculateRectangleArea(6, 3);
+                Console.WriteLine($"Площа прямокутника (ширина 6, висота 3): {rectangleArea}");
 
-            // Порівняння
-            Console.WriteLine($"m1 == m2: {m1 == m2}");
-            Console.WriteLine($"m1 != m2: {m1 != m2}");
+                // Помилка - від'ємні значення
+                // double invalidArea = CalculateTriangleArea(-2, 5);
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"Помилка: {ex.Message}");
+            }
 
-            Matrix m3 = new Matrix(new double[,] { { 1, 2 }, { 3, 4 } });
-            Console.WriteLine($"m1 == m3: {m1 == m3}");
-            Console.WriteLine($"m1.Equals(m3): {m1.Equals(m3)}");
+            // Додатковий приклад з Func
+            Console.WriteLine("\n4. Конвертація метрів у фути:");
+            Func<double, double> metersToFeet = m => m * 3.28084;
+            Console.WriteLine($"2 метри = {metersToFeet(2):F2} футів");
         }
     }
 }
