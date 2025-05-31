@@ -4,26 +4,39 @@
     {
         static void Main()
         {
-            int[] numbers = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-            var processor = new ArrayProcessor(numbers);
+            // Створення матриць
+            Matrix m1 = new Matrix(new double[,] { { 1, 2 }, { 3, 4 } });
+            Matrix m2 = new Matrix(new double[,] { { 5, 6 }, { 7, 8 } });
 
-            // Використання делегатів для фільтрації
-            var evenNumbers = processor.FilterNumbers(NumberFilters.IsEven);
-            var oddNumbers = processor.FilterNumbers(NumberFilters.IsOdd);
-            var primeNumbers = processor.FilterNumbers(NumberFilters.IsPrime);
-            var fibonacciNumbers = processor.FilterNumbers(NumberFilters.IsFibonacci);
+            Console.WriteLine("Матриця 1:");
+            m1.Print();
 
-            // Виведення результатів
-            processor.PrintArray("Вихідний масив", numbers);
-            processor.PrintArray("Парні числа", evenNumbers);
-            processor.PrintArray("Непарні числа", oddNumbers);
-            processor.PrintArray("Прості числа", primeNumbers);
-            processor.PrintArray("Числа Фібоначчі", fibonacciNumbers);
+            Console.WriteLine("Матриця 2:");
+            m2.Print();
 
-            // Альтернативний спосіб використання через лямбда-вирази
-            Console.WriteLine("\nВикористання лямбда-виразів:");
-            var multiplesOf3 = processor.FilterNumbers(n => n % 3 == 0);
-            processor.PrintArray("Числа, кратні 3", multiplesOf3);
+            // Додавання
+            Console.WriteLine("Сума матриць:");
+            (m1 + m2).Print();
+
+            // Віднімання
+            Console.WriteLine("Різниця матриць:");
+            (m1 - m2).Print();
+
+            // Множення матриць
+            Console.WriteLine("Добуток матриць:");
+            (m1 * m2).Print();
+
+            // Множення на скаляр
+            Console.WriteLine("Матриця 1 * 2.5:");
+            (m1 * 2.5).Print();
+
+            // Порівняння
+            Console.WriteLine($"m1 == m2: {m1 == m2}");
+            Console.WriteLine($"m1 != m2: {m1 != m2}");
+
+            Matrix m3 = new Matrix(new double[,] { { 1, 2 }, { 3, 4 } });
+            Console.WriteLine($"m1 == m3: {m1 == m3}");
+            Console.WriteLine($"m1.Equals(m3): {m1.Equals(m3)}");
         }
     }
 }
